@@ -64,4 +64,4 @@ if video_path and html_path:
 
 	print "Done"
 else:
-	pritn "There is a problem with the video path or html path"
+	print "There is a problem with the video path or html path"
