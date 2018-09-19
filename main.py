@@ -1,9 +1,11 @@
+# -*- coding: utf-8 -*-
 from BeautifulSoup import BeautifulSoup
 import json
 import re
 import urllib
 import os
-
+import time
+from yaspin import yaspin
 
 def take_html(file):
 	if not os.path.exists(file):
@@ -20,6 +22,7 @@ def take_html(file):
 			video_title = json_object['video']['title']
 			for progressive in json_object['request']['files']['progressive']:
 				urllib.URLopener().retrieve(progressive['url'],video_path + '/' + video_title + '.mp4')
+				sp.write("> Video %s download complete" %(video_title))
 				break
 	os.remove(file)				
 
@@ -58,10 +61,11 @@ video_path = set_videos_folder("video_path","videoFolder","videos")
 html_path = set_videos_folder("html_path","htmlFolder","HTML")
 
 if video_path and html_path:
-	for html in os.listdir(html_path):
-		html = html_path + '/' + html
-		take_html(html)
+	with yaspin(text="Downloading videos", color="cyan") as sp:
+		for html in os.listdir(html_path):
+			html = html_path + '/' + html
+			take_html(html)
 
-	print "Done"
+    	sp.ok("✔")
 else:
 	print "There is a problem with the video path or html path"

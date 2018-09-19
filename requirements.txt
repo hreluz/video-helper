@@ -1,1 +1,2 @@
 BeautifulSoup==3.2.1
+yaspin==0.14.0
