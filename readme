@@ -1,0 +1,14 @@
+Requirements for using this
+
+You need to have python and pip already installed
+	For Mac:
+		sudo easy_install pip
+
+	For Linux:
+		sudo apt-get install python-pip
+
+
+Give the permissions necessary to do.sh and execute 
+	./do.sh		
+
+Done !	
