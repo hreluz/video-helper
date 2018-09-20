@@ -21,10 +21,13 @@ def take_html(file):
 			json_object = json.loads(json_object)
 			video_title = json_object['video']['title']
 			for progressive in json_object['request']['files']['progressive']:
-				urllib.URLopener().retrieve(progressive['url'],video_path + '/' + video_title + '.mp4')
-				sp.write("> Video %s download complete" %(video_title))
+				try:
+					urllib.URLopener().retrieve(progressive['url'],video_path + '/' + video_title + '.mp4')
+					sp.write("> Video %s download complete" %(video_title))				
+					os.remove(file)
+				except:
+					sp.write("############### ERROR in file %s ###############" %(file))
 				break
-	os.remove(file)				
 
 def set_videos_folder(file_path,folder_name,type):
 
