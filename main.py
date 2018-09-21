@@ -21,9 +21,13 @@ def take_html(file):
 			json_object = json.loads(json_object)
 			video_title = json_object['video']['title']
 			for progressive in json_object['request']['files']['progressive']:
+				video = video_path + '/' + video_title + '.mp4'
 				try:
-					urllib.URLopener().retrieve(progressive['url'],video_path + '/' + video_title + '.mp4')
-					sp.write("> Video %s download complete" %(video_title))				
+					if os.path.exists(video):
+						sp.write("> Video %s ----> skipped because already exists" %(video_title))		
+					else:
+						urllib.URLopener().retrieve(progressive['url'],video)
+						sp.write("> Video %s download complete" %(video_title))				
 					os.remove(file)
 				except:
 					sp.write("############### ERROR in file %s ###############" %(file))
@@ -65,7 +69,7 @@ html_path = set_videos_folder("html_path","htmlFolder","HTML")
 
 if video_path and html_path:
 	with yaspin(text="Downloading videos", color="cyan") as sp:
-		for html in os.listdir(html_path):
+		for html in sorted(os.listdir(html_path)):
 			html = html_path + '/' + html
 			take_html(html)
 
