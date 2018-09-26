@@ -12,13 +12,15 @@ def take_html(file):
 		return
 
 	html = open(file, "r")
-	scripts = BeautifulSoup(html).find('script')
+	scripts = BeautifulSoup(html).find('script').string
 	
 	if scripts:
-		was_found = re.search(r'var r=(.*?);if' , scripts.string)
+		index_start = scripts.find('{"cdn_url":')
+		index_end = scripts.find('meo.com"};')
+		was_found = scripts[index_start:index_end+9]  if index_start >= 0 and index_end >= 0 else False
+
 		if was_found:
-			json_object = was_found.group(1) 
-			json_object = json.loads(json_object)
+			json_object = json.loads(was_found)
 			video_title = json_object['video']['title']
 			for progressive in json_object['request']['files']['progressive']:
 				video = video_path + '/' + video_title + '.mp4'
