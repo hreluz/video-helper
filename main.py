@@ -20,20 +20,34 @@ def take_html(file):
 		was_found = scripts[index_start:index_end+9]  if index_start >= 0 and index_end >= 0 else False
 
 		if was_found:
-			json_object = json.loads(was_found)
-			video_title = json_object['video']['title']
-			for progressive in json_object['request']['files']['progressive']:
-				video = video_path + '/' + (video_title + '.mp4').replace('/','_')
-				try:
+			video, video_title, url = get_url_and_video_details(was_found)
+			try:
+				if url:
 					if os.path.exists(video):
 						sp.write("> Video %s ----> skipped because already exists" %(video_title))		
 					else:
-						urllib.URLopener().retrieve(progressive['url'],video)
+						urllib.URLopener().retrieve(url,video)
 						sp.write("> Video %s download complete" %(video_title))				
 					os.remove(file)
-				except Exception, e:
-					sp.write("############### ERROR in file %s ############### Error: %s" %(file, str(e)))
-				break
+				else:
+					sp.write("############### ERROR in file %s ############### Error: %s" %(file, 'URL NOT FOUND'))
+			except Exception, e:
+				sp.write("############### ERROR in file %s ############### Error: %s" %(file, str(e)))
+
+
+def get_url_and_video_details(was_found):
+	json_object = json.loads(was_found)
+	video_title = json_object['video']['title']
+	video = video_path + '/' + (video_title + '.mp4').replace('/','_')
+	height = 0
+	url = ''
+
+	for progressive in json_object['request']['files']['progressive']:
+		if progressive['height'] > height:
+			height = progressive['height']
+			url = progressive['url']
+
+	return video, video_title, url					
 
 def set_videos_folder(file_path,folder_name,type):
 
