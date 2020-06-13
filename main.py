@@ -11,8 +11,10 @@ def take_html(file):
 	if not os.path.exists(file):
 		return
 
-	html = open(file, "r")
-	scripts = BeautifulSoup(html).find('script').string
+	with open(file) as f:
+		html = " ".join([x.strip() for x in f])
+
+	scripts = BeautifulSoup('<script>' + html + '</script>').find('script').string
 	
 	if scripts:
 		index_start = scripts.find('{"cdn_url":')
