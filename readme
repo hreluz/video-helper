@@ -12,3 +12,9 @@ Give the permissions necessary to do.sh and execute
 	./do.sh		
 
 Done !	
+
+-------------------------------------
+
+Also 
+
+ virtualenv -p /usr/bin/python2.7 .env
