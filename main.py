@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 from BeautifulSoup import BeautifulSoup
 import json
-import re
 import urllib
 import os
-import time
+from datetime import datetime
 from yaspin import yaspin
+import unidecode
 
 def take_html(file):
 	if not os.path.exists(file):
@@ -25,7 +25,7 @@ def take_html(file):
 			video, video_title, url = get_url_and_video_details(was_found)
 			try:
 				if url:
-					if os.path.exists(video):
+					if does_video_exists(video_title):
 						sp.write("> Video %s ----> skipped because already exists" %(video_title))		
 					else:
 						urllib.URLopener().retrieve(url,video)
@@ -37,10 +37,17 @@ def take_html(file):
 				sp.write("############### ERROR in file %s ############### Error: %s" %(file, str(e)))
 
 
+def does_video_exists(video):
+	for f in os.listdir(video_path):
+		if video in f:
+			return True
+	return False
+
+
 def get_url_and_video_details(was_found):
 	json_object = json.loads(was_found)
-	video_title = json_object['video']['title']
-	video = video_path + '/' + (video_title + '.mp4').replace('/','_')
+	video_title = unidecode.unidecode(json_object['video']['title'])
+	video = video_path + '/' + (datetime.utcnow().strftime('%s') + '____' + video_title + '.mp4').replace('/','_')
 	height = 0
 	url = ''
 
