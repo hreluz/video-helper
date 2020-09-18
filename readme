@@ -6,6 +6,21 @@ You need to have python and pip already installed
 
 	For Linux:
 		sudo apt-get install python-pip
+		In case it does not work
+			curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+			python2 get-pip.py
+
+Then install:
+	sudo pip virtualenv
+
+Create an env
+	virtualenv .env
+
+Activate env
+	source .env/bin/activate
+
+Install dependencies
+	pip install -r requirements.txt
 
 
 Give the permissions necessary to do.sh and execute 
